@@ -136,18 +136,30 @@ Solving for $x$:
 \[
 x^* = b-\frac{1}{2}A^{-1}C^Tu
 \]
-
+is the analytic form of the optimal solution $x^*$ of the problem, written as a function of the Lagrange multiplier $u$.
 \subsubsection*{Complementary slackness}
-Let $U=disg(u)$, the condition
-\[u_i\cdot h_i(x)=0, \forall i\]
-can be rewritten in matrix form as:
+The condition
+\begin{equation}
+	\label{complem}
+	u_i\cdot h_i(x)=0, \forall i 
+	\,\, \longleftrightarrow \,\,
+	u_i\cdot (Cx-d)_i=0, \forall i 
+\end{equation}
+means that when $h_i(x) < 0$, the corresponding component $u_i$ of the Lagrange multiplier should be 0 because the constrain is not currently \textit{active}.\\
+Otherwise, if $x$ is on the boundary of the feasible set the constraint $h_i(x)$ is active and can be rewritten as an equality constraint $h_i(x) =0$. 
+Hence, Equation \ref{complem} is verified for each $i$.\\
+Based on these observations there exist a class of optimization algorithms called \textit{Active set methods}.\\\\
+Let $U=diag(u)$, this condition can be rewritten in matrix form as:
 \[ U(Cx-d) = 0 \]
 
 \subsubsection*{Primal feasibility}
 \[ Cx-d \leq 0\]
+This condition is required in the formulation of the primal problem.
 
 \subsubsection*{Dual feasibility}
 \[ u\geq0 \]
+This condition is required because we want to penalize a violation of the inequality constraints of the primal problem in the Lagrangian function.\\
+In other words, if $u_i<0$ for some $i$, minimizing $L(x,u)$ over $x$ would give a solution such that $h_i(x)>0$ for some $i$.
 
 \subsection*{Question 2 - Dual Problem}
 From the stationarity condition, by solving Equation \ref{stationarity}, I obtain the analytic formula for the optimal $x^*$ as a function of the Lagrange multiplayer $u$, when $u\geq0$.
@@ -225,7 +237,7 @@ This problem can be parallelized on up to $m$ nodes, each one solving the proble
 However, we have to guarantee that the last constraint is shared among all the nodes, which unfortunately has an impact on the performances.\\
 In fact, at each iteration all the nodes should share their local $x_i$ with the others in order to guarantee that the final solution will be a feasible $x*$. This communication cost depends on the topology of the network that connects all the nodes: the more connected is the network, the higher is the impact of network communication delays, but the faster is the overall convergence of the method.\\
 For instance, if we implement a clique network, we can achieve the fastest information propagation among nodes.\\
-Eventually, if the network topology is well designed, parallelization can improve the performances and the convergence speed.
+Eventually, if the network topology is well designed, parallelization can improve the overall convergence speed even though the total number of iterations are the same as the method without parallelization. This is a way to distribute the load among different nodes.\\
 
 
 \end{document}
